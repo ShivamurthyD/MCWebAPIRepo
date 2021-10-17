@@ -4,7 +4,9 @@ using System.Text;
 
 namespace MaxCleanDAL
 {
-    class DBContext
+    public class DBContext
     {
+        public int MyProperty { get; set; }
+        
     }
 }
