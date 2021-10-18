@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace MaxCleanAPI
@@ -24,8 +25,15 @@ namespace MaxCleanAPI
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddControllers();
+        {            
+            services.AddControllers().AddJsonOptions(x =>
+            {
+                // serialize enums as strings in api responses (e.g. Role)
+                x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+
+                // ignore omitted parameters on models to enable optional params (e.g. User update)
+                x.JsonSerializerOptions.IgnoreNullValues = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
