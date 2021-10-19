@@ -12,32 +12,32 @@ namespace MaxCleanAPI.Controllers
     public class RegisterController : ControllerBase
     {
         [HttpGet]
-        public IActionResult CustRegister()
+        public IActionResult CustRegister()   
         {
-            if (RegisterResponse.registerRequests == null)
+            if (RegisterResponse.register == null)
             {
                 return NotFound(StatusCodes.Status404NotFound);
             }
             else
             {
-                return Ok(RegisterResponse.registerRequests);
+                return Ok(RegisterResponse.register);
             }
         }
         [HttpPost]
-        public IActionResult Addcustomer([FromBody] RegisterRequest model)
+        public IActionResult Addcustomer(RegisterRequest model)
         {
-            model.Datecreated = DateTime.Now;
-            model.dateupdated = DateTime.Now;
-            RegisterResponse.AddInfo(model);
+            model.createddate = DateTime.Now;
+            model.updateddate = DateTime.Now;
+            RegisterResponse.Add(model);
             return Created("Added successfully", model);
         }
         [Route("verification")]
         [HttpGet]
 
-        public IActionResult EmailMobileVerification([FromBody] RegisterRequest model)
+        public IActionResult EmailMobileVerification( RegisterRequest model)
         {
-            RegisterResponse.Emailverified(model.email, model.mobilenum);
-            return Ok(RegisterResponse.registerRequests);
+            RegisterResponse.EmaiAndMobileVerification(model.Email, model.Mobil);
+            return Ok(RegisterResponse.register);
         }
     }
 }
