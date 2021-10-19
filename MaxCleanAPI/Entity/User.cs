@@ -15,7 +15,7 @@ namespace MaxCleanAPI.Entity
         public string Email { get; set; }
         public bool Mobilverfied { get; set; }
         public bool Emailverified { get; set; }
-        public string Status { get; set; }
+        public bool Status { get; set; }
         public ROLE Role { get; set; }
         public DateTime createddate { get; set; }
         public DateTime updateddate { get; set; }

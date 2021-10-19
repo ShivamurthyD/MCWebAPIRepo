@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MaxCleanAPI.DTO
 {
-    public class RegisterRequest
+    public class UserRequest
     {
         public string firstname { get; set; }
         public string lastname { get; set; }
@@ -19,18 +19,18 @@ namespace MaxCleanAPI.DTO
         public DateTime updateddate { get; set; }
     }
 
-    public class RegisterResponse
+    public class UserResponse
     {
-        public static List<RegisterRequest> register { get; set; }
-        public static List<RegisterRequest>  Add(RegisterRequest registerRequest)
+        public static List<UserRequest> register { get; set; }
+        public static List<UserRequest>  Add(UserRequest registerRequest)
         {
-            register = new List<RegisterRequest>();
+            register = new List<UserRequest>();
             register.Add(registerRequest);
             return register;
         }
         public static bool EmaiAndMobileVerification(string email,Int64 mobile)
         {
-           RegisterRequest registerRequest= register.SingleOrDefault(x => x.Email == email && x.Mobil == mobile);
+           UserRequest registerRequest= register.SingleOrDefault(x => x.Email == email && x.Mobil == mobile);
             if(registerRequest!=null)
             {
                 registerRequest.Emailverified = true;

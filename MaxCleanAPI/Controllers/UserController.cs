@@ -1,4 +1,6 @@
 ﻿using MaxCleanAPI.DTO;
+using MaxCleanAPI.Helpers;
+using MaxCleanAPI.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,6 +16,13 @@ namespace MaxCleanAPI.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+
+        private readonly IUserService userService;
+
+        public UserController(IUserService userService)
+        {
+            this.userService = userService;
+        }
         //[HttpGet]
         //public IEnumerable<string> Get()
         //{
@@ -25,13 +34,13 @@ namespace MaxCleanAPI.Controllers
         {
             LoginResponse obj = new LoginResponse();
             obj.Mobile = loginRequest.Mobile;
-            
+
             return Ok(obj);
         }
 
         [HttpGet("SignUp")]
 
-        public IActionResult SignUp(RegisterRequest registerRequest)
+        public IActionResult SignUp(UserRequest registerRequest)
         {
             if (registerRequest == null)
             {
@@ -39,15 +48,17 @@ namespace MaxCleanAPI.Controllers
             }
             registerRequest.createddate = DateTime.Now;
             registerRequest.updateddate = DateTime.Now;
-            RegisterResponse.Add(registerRequest);
-            return Created("Added successfully", RegisterResponse.register);
+            UserResponse.Add(registerRequest);
+            userService.CreateUser(registerRequest);
+
+            return Created("Added successfully", UserResponse.register);
         }
 
         [HttpGet("Verification")]
-        public IActionResult EmailMobileVerification(RegisterRequest model)
+        public IActionResult EmailMobileVerification(UserRequest model)
         {
-            RegisterResponse.EmaiAndMobileVerification(model.Email, model.Mobil);
-            return Ok(RegisterResponse.register);
+            UserResponse.EmaiAndMobileVerification(model.Email, model.Mobil);
+            return Ok(UserResponse.register);
         }
 
         #region OLD Code No Use       

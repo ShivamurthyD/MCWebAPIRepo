@@ -1,3 +1,5 @@
+using MaxCleanAPI.Helpers;
+using MaxCleanAPI.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +28,7 @@ namespace MaxCleanAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<DataContext>();
             services.AddControllers();
             #region This Will Ignore Json Null value on this Project
             //services.AddControllers().AddJsonOptions(x =>
@@ -37,6 +40,8 @@ namespace MaxCleanAPI
             //    x.JsonSerializerOptions.IgnoreNullValues = true;
             //});
             #endregion
+
+            services.AddScoped<IUserService, UserService>();
 
         }
 
