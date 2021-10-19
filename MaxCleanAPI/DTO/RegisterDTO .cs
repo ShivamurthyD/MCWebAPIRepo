@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MaxCleanAPI.DTOO
+namespace MaxCleanAPI.DTO
 {
     public class RegisterRequest
     {
@@ -25,19 +25,25 @@ namespace MaxCleanAPI.DTOO
     public class RegisterResponse
     {
         public static List<RegisterRequest> registerRequests { get; set; }
-        public static registerRequests AddInfo(RegisterRequest registerRequest)
+        public static List<RegisterRequest> AddInfo(RegisterRequest registerRequest)
         {
-            List<RegisterRequest> registerRequest1 = new List<RegisterRequest>();
-            registerRequest1.Add(registerRequest);
+            registerRequests = new List<RegisterRequest>();
+            registerRequests.Add(registerRequest);
+            return registerRequests;
         }
-        public static bool Emailverified(string email, string mobile)
+        public static bool Emailverified(string email, Int64 mobile)
         {
             RegisterRequest registerRequest = registerRequests.SingleOrDefault(x => x.email == email && x.mobilenum==mobile);
             if(registerRequest!=null)
             {
                 registerRequest.Mobileverified = true;
-                registerRequest.email = true;
+                registerRequest.emailverified = true;
                 registerRequest.status = "Activated";
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 

@@ -1,62 +1,43 @@
-﻿using MaxCleanAPI.DTO;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
+using MaxCleanAPI.DTO;
 namespace MaxCleanAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class RegisterController : ControllerBase
     {
-        //[HttpGet]
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
-
         [HttpGet]
-        public IEnumerable<string> Login([FromBody] LoginRequest loginRequest)
+        public IActionResult CustRegister()
         {
-            return new string[] {Convert.ToString(loginRequest.Mobile), loginRequest.Password};
+            if (RegisterResponse.registerRequests == null)
+            {
+                return NotFound(StatusCodes.Status404NotFound);
+            }
+            else
+            {
+                return Ok(RegisterResponse.registerRequests);
+            }
         }
+        [HttpPost]
+        public IActionResult Addcustomer([FromBody] RegisterRequest model)
+        {
+            model.Datecreated = DateTime.Now;
+            model.dateupdated = DateTime.Now;
+            RegisterResponse.AddInfo(model);
+            return Created("Added successfully", model);
+        }
+        [Route("verification")]
+        [HttpGet]
 
-        #region OLD Code No Use       
-        //// GET: api/<UserController>
-        //[HttpGet]
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
-
-        //// GET api/<UserController>/5
-        //[HttpGet("{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
-
-        //// POST api/<UserController>
-        //[HttpPost]
-        //public void Post([FromBody] string value)
-        //{
-        //}
-
-        //// PUT api/<UserController>/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
-
-        //// DELETE api/<UserController>/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
-        #endregion
+        public IActionResult EmailMobileVerification([FromBody] RegisterRequest model)
+        {
+            RegisterResponse.Emailverified(model.email, model.mobilenum);
+            return Ok(RegisterResponse.registerRequests);
+        }
     }
 }
