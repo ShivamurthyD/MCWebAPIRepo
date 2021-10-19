@@ -1,4 +1,5 @@
 ﻿using MaxCleanAPI.DTO;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -19,10 +20,34 @@ namespace MaxCleanAPI.Controllers
         //    return new string[] { "value1", "value2" };
         //}
 
-        [HttpGet]
-        public IEnumerable<string> Login([FromBody] LoginRequest loginRequest)
+        [HttpGet("Login")]
+        public IActionResult Login(LoginRequest loginRequest)
         {
-            return new string[] {Convert.ToString(loginRequest.Mobile), loginRequest.Password};
+            LoginResponse obj = new LoginResponse();
+            obj.Mobile = loginRequest.Mobile;
+            
+            return Ok(obj);
+        }
+
+        [HttpGet("SignUp")]
+
+        public IActionResult SignUp(RegisterRequest registerRequest)
+        {
+            if (registerRequest == null)
+            {
+                return BadRequest(StatusCodes.Status400BadRequest);
+            }
+            registerRequest.createddate = DateTime.Now;
+            registerRequest.updateddate = DateTime.Now;
+            RegisterResponse.Add(registerRequest);
+            return Created("Added successfully", RegisterResponse.register);
+        }
+
+        [HttpGet("Verification")]
+        public IActionResult EmailMobileVerification(RegisterRequest model)
+        {
+            RegisterResponse.EmaiAndMobileVerification(model.Email, model.Mobil);
+            return Ok(RegisterResponse.register);
         }
 
         #region OLD Code No Use       
