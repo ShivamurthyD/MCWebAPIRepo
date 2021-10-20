@@ -11,8 +11,10 @@ namespace MaxCleanAPI.Service
 {
     public interface IUserService
     {
-        User GetUser(int ID);
+        User GetUser(string mobile);
         void CreateUser(UserRequest userRequest);
+        bool EmailMobilVerification(string email, string mobile);
+        void DeleteUser(string mobile);
     }
     public class UserService : IUserService
     {
@@ -49,9 +51,41 @@ namespace MaxCleanAPI.Service
            
         }
 
-        public User GetUser(int ID)
+        public void DeleteUser(string mobile)
         {
-            var user = dataContext.Users.Find(ID);
+            var findUser = dataContext.Users.SingleOrDefault(x => x.Mobile == mobile);
+            if(findUser==null)
+            {
+                throw new AppException($"Mobile number {mobile} not exists in the record");
+            }
+            else
+            {
+                dataContext.Users.Remove(findUser);
+                dataContext.SaveChanges();
+            }
+        }
+
+        public bool EmailMobilVerification(string email, string mobile)
+        {
+            var userverification = dataContext.Users.SingleOrDefault(x => x.Mobile == mobile);
+            if (userverification != null)
+            {
+                userverification.Mobilverfied = true;
+                userverification.Emailverified = true;
+                userverification.Status = true;
+                dataContext.SaveChanges();
+                return true;
+            }
+            else
+            {
+                throw new AppException($"Entered Email : {email}  and Entered Mobile num : {mobile} Not valid");
+            }
+                
+        }
+
+        public User GetUser(string mobile)
+        {
+            var user = dataContext.Users.SingleOrDefault(x => x.Mobile == mobile);
             if (user == null) throw new KeyNotFoundException("User record not found!");
             return user;
         }

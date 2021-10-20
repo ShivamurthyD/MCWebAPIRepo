@@ -38,7 +38,7 @@ namespace MaxCleanAPI.Controllers
             return Ok(obj);
         }
 
-        [HttpGet("SignUp")]
+        [HttpPost]
 
         public IActionResult SignUp(UserRequest registerRequest)
         {
@@ -55,10 +55,23 @@ namespace MaxCleanAPI.Controllers
         }
 
         [HttpGet("Verification")]
-        public IActionResult EmailMobileVerification(UserRequest model)
+        public IActionResult EmailMobileVerification(string email,string mobile)
         {
-            UserResponse.EmaiAndMobileVerification(model.Email, model.Mobil);
-            return Ok(UserResponse.register);
+            userService.EmailMobilVerification(email, mobile);
+            return Ok();
+        }
+        [HttpDelete]
+        public IActionResult DeleteUser(string mobile)
+        {
+            userService.DeleteUser(mobile);
+            return Ok();
+        }
+        [HttpGet("GetUserByid")]
+        public IActionResult GetUserByid(string mobile)
+        {
+           var items= userService.GetUser(mobile);
+            return Created("", items);
+            
         }
 
         #region OLD Code No Use       

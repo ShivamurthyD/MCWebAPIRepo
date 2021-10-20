@@ -9,7 +9,7 @@ namespace MaxCleanAPI.DTO
     {
         public string firstname { get; set; }
         public string lastname { get; set; }
-        public Int64 Mobil { get; set; }
+        public string Mobil { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
         public bool Mobilverfied { get; set; }
@@ -28,14 +28,14 @@ namespace MaxCleanAPI.DTO
             register.Add(registerRequest);
             return register;
         }
-        public static bool EmaiAndMobileVerification(string email,Int64 mobile)
+        public static bool EmaiAndMobileVerification(string email,string mobile)
         {
            UserRequest registerRequest= register.SingleOrDefault(x => x.Email == email && x.Mobil == mobile);
             if(registerRequest!=null)
             {
                 registerRequest.Emailverified = true;
                 registerRequest.Mobilverfied = true;
-                registerRequest.Status = "Mobil and Email erified";
+                registerRequest.Status = "Mobil and Email verified";
                 return true;
             }
             else
