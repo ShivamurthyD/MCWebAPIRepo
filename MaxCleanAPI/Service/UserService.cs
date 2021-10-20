@@ -15,6 +15,7 @@ namespace MaxCleanAPI.Service
         void CreateUser(UserRequest userRequest);
         bool EmailMobilVerification(string email, string mobile);
         void DeleteUser(string mobile);
+        bool passwordhassh(string mobile, string password);
     }
     public class UserService : IUserService
     {
@@ -45,6 +46,7 @@ namespace MaxCleanAPI.Service
             };
 
             user.Password = BCryptNet.EnhancedHashPassword(userRequest.Password);
+           
 
             dataContext.Users.Add(user);
             dataContext.SaveChanges();
@@ -88,6 +90,37 @@ namespace MaxCleanAPI.Service
             var user = dataContext.Users.SingleOrDefault(x => x.Mobile == mobile);
             if (user == null) throw new KeyNotFoundException("User record not found!");
             return user;
+        }
+
+        public bool passwordhassh(string mobile, string password)
+        {
+            var items=dataContext.Users.SingleOrDefault(x => x.Mobile == mobile);
+            if(items!=null&& items.Mobilverfied==true&&items.Emailverified==true&&items.Status==true)
+            {
+                if(mobile.Equals(mobile) && BCryptNet.EnhancedVerify(password,items.Password))
+                {
+                    return true;
+                }
+                else
+                {
+                    throw new AppException("Password or mobile num incorrect");
+                }
+            }
+            else
+            {
+                throw new AppException("Mobile num not register : ", mobile);
+            }
+        }
+        public string DecodeFrom64(string encodedData)
+        {
+            System.Text.UTF8Encoding encoder = new System.Text.UTF8Encoding();
+            System.Text.Decoder utf8Decode = encoder.GetDecoder();
+            byte[] todecode_byte = Convert.FromBase64String(encodedData);
+            int charCount = utf8Decode.GetCharCount(todecode_byte, 0, todecode_byte.Length);
+            char[] decoded_char = new char[charCount];
+            utf8Decode.GetChars(todecode_byte, 0, todecode_byte.Length, decoded_char, 0);
+            string result = new String(decoded_char);
+            return result;
         }
     }
 }

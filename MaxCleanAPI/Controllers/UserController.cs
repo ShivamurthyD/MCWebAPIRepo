@@ -32,10 +32,15 @@ namespace MaxCleanAPI.Controllers
         [HttpGet("Login")]
         public IActionResult Login(LoginRequest loginRequest)
         {
-            LoginResponse obj = new LoginResponse();
-            obj.Mobile = loginRequest.Mobile;
 
-            return Ok(obj);
+            if (userService.passwordhassh(loginRequest.Mobile, loginRequest.Password))
+            {
+                return Ok();
+            }
+            else
+            {
+                throw new AppException("Not logged in");
+            }
         }
 
         [HttpPost]
